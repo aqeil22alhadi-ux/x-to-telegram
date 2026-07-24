@@ -20,8 +20,7 @@ jobs:
 
       - name: Install libraries
         run: |
-          pip install requests python-telegram-bot
-
+          pip install requests python-telegram-bot feedparser
       - name: Run bot
         env:
           X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
