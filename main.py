@@ -17,12 +17,8 @@ def load_accounts():
         ]
 
 
-def get_rss(account):
-    return f"https://nitter.net/{account}/rss"
-
-
 def send_post(account, entry):
-    text = (
+    message = (
         f"📌 @{account}\n\n"
         f"{entry.title}\n\n"
         f"🔗 {entry.link}"
@@ -30,16 +26,23 @@ def send_post(account, entry):
 
     bot.send_message(
         chat_id=CHANNEL_ID,
-        text=text
+        text=message
     )
 
 
 accounts = load_accounts()
 
+total = 0
+
 for account in accounts:
-    rss = feedparser.parse(get_rss(account))
+    url = f"https://nitter.net/{account}/rss"
 
-    for entry in rss.entries[:3]:
-        send_post(account, entry)
+    feed = feedparser.parse(url)
 
-print("تم الانتهاء")
+    print(account, ":", len(feed.entries), "تغريدة")
+
+    if feed.entries:
+        send_post(account, feed.entries[0])
+        total += 1
+
+print("تم إرسال", total, "تغريدة")
